@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://fantding.github.io/2021/06/01/java-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/</loc>
+    <lastmod>2021-06-01</lastmod>
+  </url>
+  <url>
+    <loc>https://fantding.github.io/2021/06/01/java-%E5%8C%85/</loc>
+    <lastmod>2021-06-01</lastmod>
+  </url>
+  <url>
     <loc>https://fantding.github.io/2021/04/20/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%EF%BC%9ALearning-a-Unified-Sample-Weighting-Network-for-Object-Detection/</loc>
     <lastmod>2021-05-30</lastmod>
   </url>
