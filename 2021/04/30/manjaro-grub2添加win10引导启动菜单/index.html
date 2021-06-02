@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      265 字
+      272 字
     </span>
   
 
@@ -238,8 +238,8 @@
             <h1 style="display: none">manjaro grub2添加win10引导启动菜单</h1>
             
             <div class="markdown-body">
-              <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>manjaro更新后，每次启动直接进manjaro了，没办法从菜单中选择进入win10</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><h2 id="step1-打开grub2菜单"><a href="#step1-打开grub2菜单" class="headerlink" title="step1. 打开grub2菜单"></a>step1. 打开grub2菜单</h2><ul>
+              <h1 id="背景">1. 背景</h1><p>manjaro更新后，每次启动直接进manjaro了，没办法从菜单中选择进入win10</p>
+<h1 id="解决">2. 解决</h1><h2 id="step1-打开grub2菜单">2.1. step1. 打开grub2菜单</h2><ul>
 <li>root权限打开<code>/etc/default/grub</code></li>
 <li>修改以下两处：<ul>
 <li><code>GRUB_TIMEOUT_STYLE=hidden</code> -&gt; <code>GRUB_TIMEOUT_STYLE=menu</code></li>
@@ -249,7 +249,7 @@
 <li><code>sudo update-grub</code></li>
 <li>重启应该就能看到菜单了</li>
 </ul>
-<h2 id="step2-添加win10引导"><a href="#step2-添加win10引导" class="headerlink" title="step2. 添加win10引导"></a>step2. 添加win10引导</h2><blockquote>
+<h2 id="step2-添加win10引导">2.2. step2. 添加win10引导</h2><blockquote>
 <p>参考<a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/453124/add-windows-10-to-grub2-bootloader">Starbuck的回答</a></p>
 </blockquote>
 <ul>
@@ -265,7 +265,7 @@
 <li><p><code>update-grub</code>后，重启</p>
 </li>
 </ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<h1 id="参考">3. 参考</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/182248/why-is-grub-menu-not-shown-when-starting-my-computer">https://askubuntu.com/questions/182248/why-is-grub-menu-not-shown-when-starting-my-computer</a></li>
 <li><a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/453124/add-windows-10-to-grub2-bootloader">https://unix.stackexchange.com/questions/453124/add-windows-10-to-grub2-bootloader</a></li>
 <li><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/661947/add-windows-10-to-grub-os-list">https://askubuntu.com/questions/661947/add-windows-10-to-grub-os-list</a></li>
