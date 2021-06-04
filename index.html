@@ -184,6 +184,64 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/06/04/java-%E6%B3%A8%E9%87%8A/">java-注释</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/06/04/java-%E6%B3%A8%E9%87%8A/">
+          
+          
+            
+          
+          1. 注释的插入
+javadoc 会从源码中抽取信息，形成HTML文档
+
+
+抽取范围：
+
+包
+公有类与接口
+公有的和受保护的构造器及方法
+公有的和受保护的域
+
+
+通用标记
+
+@since：@since version 1.7.1，支持的版本
+
+@deprecated：这个标记将对类、方法或变量添加一个不再使用的注释。文本中给出取代的建议
+@deprecated Use &lt;code&gt; s
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-04 16:00" pubdate>
+              2021-06-04
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%8D%B7/">java核心技术卷</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/06/01/java-%E5%8C%85/">java-包</a>
       </h1>
 
@@ -193,14 +251,15 @@
           
             
           
-          1. 单个源文件
-一个源文件只能有一个共有类，且文件名必须与public类名一致
-单文件有多个类时，javac EmpolyeeTest.java会生成两个类文件：EmployeeTest.class和Employee.class
-将程序中包含main方法的类名提供给字节码解释器，以便启动这个程序java Employeetest
+          1. 包的导入1.1. 类的导入
+  import java.time.LocalDate ;
+使用*引入包下的所有类： import java.util.*;
+只能使用星号导入一个包，而不能使用import java.*  or import java.*.*导入以java为前缀的所有包
 
 
+在包中定位类是编译器(compiler )的工作。类文件中的字节码肯定使用完整的包名来引用其他类
 
-123456789101112131415161718192
+1.
         </a>
       </p>
 

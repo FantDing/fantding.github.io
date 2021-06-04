@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.9k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      16
+      21
        分钟
     </span>
   
@@ -311,7 +311,7 @@
 </li>
 <li><p>调用另一个构造器</p>
 <ul>
-<li><p>如果构造器的第一个语句形如<code>this(...)</code>，这个构造器将调用同一个类的另一个构造器。下是一个典型的例子：</p>
+<li><p>如果构造器的<strong>第一个语句</strong>形如<code>this(...)</code>，这个构造器将调用同一个类的另一个构造器。下是一个典型的例子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Employee</span><span class="hljs-params">(<span class="hljs-keyword">double</span> s)</span></span>&#123;<br>    <span class="hljs-keyword">this</span>(<span class="hljs-string">&quot;Empolyee #&quot;</span>+nextId, s); <span class="hljs-comment">// calls Empolyee(String,double)</span><br>    nextId++;<br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
@@ -372,6 +372,41 @@
 <p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210602102320201.png" srcset="/img/loading.gif" lazyload alt="image-20210602102320201"></p>
 </li>
 </ul>
+<h1 id="继承">3. 继承</h1><h2 id="子类定义">3.1. 子类定义</h2><ul>
+<li>extends关键字</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Manager</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Employee</span></span>&#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<div class="note note-default">
+            <p>C++注释：Java与C++定义继承类的方式十分相似。Java用关键字 extends代替了C++中的冒号(：)。在Java中，所有的继承都是<em>公有继承</em>，而没有C++中的私有继承和保护继承</p>
+          </div>
+
+<ul>
+<li>继承层次：Java不支持多继承。Java中多继承功能由接口实现</li>
+</ul>
+<h2 id="访问权限-1">3.2. 访问权限</h2><ul>
+<li>不能直接访问父类私有域。<ul>
+<li>如子类<code>getSalary()</code>访问父类<code>private salary</code>：<code>return salary+this.bonus;</code>会出错；</li>
+<li>直接访问<code>salary</code>也会出错：<code>return getSalary()+this.bonus;</code>，因为<code>getSalary()</code>已经被重写了。</li>
+<li>要想访问父类域，需要使用super关键字：<code>return super.getSalary()+this.bonus;</code></li>
+</ul>
+</li>
+</ul>
+<div class="note note-default">
+            <p>注释：有些人认为 super与this引用是类似的概念，实际上，这样比较并不太恰当。这是因为 super不是一个对象的引用，不能将 super赋给另一个对象变量，它只是一个指示编译器调用超类方法的特殊关键字。</p>
+          </div>
+
+<h2 id="子类构造器">3.3. 子类构造器</h2><p>使用super调用父类构造器，实现对私有域的初始化</p>
+<ul>
+<li>使用super调用构造器的语句必须是子类构造器的<strong>第一条语句</strong></li>
+<li>如果子类的构造器没有显式地调用超类的构造器，则将自动地调用超类默认（没有参数）的构造器。如果超类没有不带参数的构造器，并且在子类的构造器中又没有显式地调用超类的其他构造器，则Java编译器将报告错误。</li>
+</ul>
+<div class="note note-warning">
+            <ul><li>关键字this有两个用途：一是引用隐式参数，二是调用该类其他的构造器。</li><li>同样， super关键字也有两个用途：一是调用超类的方法，二是调用超类的构造器。</li><li>在调用构造器的时候，这两个关键字的使用方式很相似。调用构造器的语句只能作为另个构造器的第一条语句出现。构造参数既可以传通给本类(this)的其他构造器，也可以传递给超类( super)的构造器。</li></ul>
+          </div>
+
+
+
 
             </div>
             <hr>

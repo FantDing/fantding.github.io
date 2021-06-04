@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      511 字
+      1.2k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      15
        分钟
     </span>
   
@@ -238,7 +238,73 @@
             <h1 style="display: none">java-包</h1>
             
             <div class="markdown-body">
-              <h1 id="单个源文件">1. 单个源文件</h1><ul>
+              <h1 id="包的导入">1. 包的导入</h1><h2 id="类的导入">1.1. 类的导入</h2><ul>
+<li>  <code>import java.time.LocalDate ;</code></li>
+<li>使用<code>*</code>引入包下的所有类： <code>import java.util.*;</code><ul>
+<li>只能使用星号导入一个包，而不能使用<code>import java.*</code>  or <code>import java.*.*</code>导入以java为前缀的所有包</li>
+</ul>
+</li>
+<li>在包中定位类是编译器(compiler )的工作。类文件中的字节码肯定使用完整的包名来引用其他类</li>
+</ul>
+<h2 id="静态导入">1.2. 静态导入</h2><blockquote>
+<p>import 语句不仅可以导入类,还增加了导入静态方法和静态域的功能。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> java.lang.System.*;<br><br>out.println(...); <span class="hljs-comment">// System.out</span><br>exit(<span class="hljs-number">0</span>); <span class="hljs-comment">//System.exit</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="包的定义">2. 包的定义</h1><h2 id="将类放入包中">2.1. 将类放入包中</h2><ul>
+<li><code>package</code>定义</li>
+<li>将源文件放到包名对应的子目录中</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/20210603210253.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="包作用域">3. 包作用域</h1><ul>
+<li>没有被指定private or public的部分（类、方法、变量）可以被同一个包中的所有方法访问</li>
+</ul>
+<h1 id="class-path">4. class path</h1><h2 id="jar包">4.1. jar包</h2><ul>
+<li>在一个JAR文件中,可以包含多个压缩形式的类文件和子目录,这样既可以节省又可以改善性能</li>
+<li>JAR文件使用ZIP格式组织文件和子目录</li>
+</ul>
+<h2 id="虚拟机定位类">4.2. 虚拟机定位类</h2><blockquote>
+<p>以class path是<code>/home/user/classdir:.:/home/user/archives/archive.jar</code>为例</p>
+</blockquote>
+<ul>
+<li>假定虚拟机要搜寻<code>com.horstmann.corejava.Employee</code>类文件（对于虚拟机来说类完整路径）：<ul>
+<li>首先要查看存储在jre/lib和jre/lib/ext目录下的归档文件中所存放的系统类文件<ul>
+<li>由于运行时库文件（rt.jar和在jre/lib与jre/lib/ext目录下的一些其他jar文件）会被自动地搜索,所以不必将它们显式地列在类路径中</li>
+</ul>
+</li>
+<li><code>/home/user/classdir/com.horstmann.corejava.Employee.class</code></li>
+<li>从当前目录开始：<code>com.horstmann.corejava.Employee.class</code></li>
+<li><code>com.horstmann.corejava.Employee.class</code> inside<code>/home/user/archives/archive.jar</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="编译器定位类">4.3. 编译器定位类</h2><blockquote>
+<p>即找到类所属的完整包名</p>
+</blockquote>
+<ul>
+<li><p>假设源文件包含：<code>import java.util.*</code> &amp; <code>import com.hortmann.corejava.*</code>; 并且引用了<code>Employee</code>类</p>
+</li>
+<li><p>编译器</p>
+<ul>
+<li>先试图查找<code>java.lang.Employee</code>（被默认导入）</li>
+<li><code>java.util.Employee</code></li>
+<li><code>com.hortmann.corejava.Empoyee</code></li>
+<li>和当前包中的Empolyee</li>
+</ul>
+</li>
+<li><p>不唯一则编译出错</p>
+</li>
+<li><p>如果import 的class的source file比current file要新（说明被import的内容有改动），则source file自动被重新编译</p>
+<ul>
+<li>可以看出有一个class -&gt; source file寻找的过程：如果其他包public class，由于class需要与file文件名相同所以很容易找到；如果当前包非public class，则需要搜索当前包中的所有source file，来确定哪个source file定义了此类</li>
+</ul>
+</li>
+</ul>
+<h2 id="设置class-path">4.4. 设置class path</h2><ul>
+<li><code>java -classpath /home/user/classdir:.:/home/user/archives/archive.jar MyProg</code></li>
+<li><code>export CLASSPATH=/home/user/classdir:.:/home/user/archives/archive.jar</code>：直到shell退出有效</li>
+</ul>
+<h1 id="补充编译相关">5. 补充编译相关</h1><h2 id="单个源文件">5.1. 单个源文件</h2><ul>
 <li>一个源文件只能有一个共有类，且文件名必须与public类名一致</li>
 <li>单文件有多个类时，<code>javac EmpolyeeTest.java</code>会生成两个类文件：<code>EmployeeTest.class</code>和<code>Employee.class</code><ul>
 <li>将程序中包含<code>main</code>方法的类名提供给字节码解释器，以便启动这个程序<code>java Employeetest</code></li>
@@ -247,7 +313,7 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.time.*;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * This program tests the Employee class.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.12 2015-05-08</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Cay Horstmann</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EmployeeTest</span></span><br><span class="hljs-class"></span>&#123;<br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span><br><span class="hljs-function">   </span>&#123;<br>      <span class="hljs-comment">// fill the staff array with three Employee objects</span><br>      Employee[] staff = <span class="hljs-keyword">new</span> Employee[<span class="hljs-number">3</span>];<br><br>      staff[<span class="hljs-number">0</span>] = <span class="hljs-keyword">new</span> Employee(<span class="hljs-string">&quot;Carl Cracker&quot;</span>, <span class="hljs-number">75000</span>, <span class="hljs-number">1987</span>, <span class="hljs-number">12</span>, <span class="hljs-number">15</span>);<br>      staff[<span class="hljs-number">1</span>] = <span class="hljs-keyword">new</span> Employee(<span class="hljs-string">&quot;Harry Hacker&quot;</span>, <span class="hljs-number">50000</span>, <span class="hljs-number">1989</span>, <span class="hljs-number">10</span>, <span class="hljs-number">1</span>);<br>      staff[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</span> Employee(<span class="hljs-string">&quot;Tony Tester&quot;</span>, <span class="hljs-number">40000</span>, <span class="hljs-number">1990</span>, <span class="hljs-number">3</span>, <span class="hljs-number">15</span>);<br><br>      <span class="hljs-comment">// raise everyone&#x27;s salary by 5%</span><br>      <span class="hljs-keyword">for</span> (Employee e : staff)<br>         e.raiseSalary(<span class="hljs-number">5</span>);<br><br>      <span class="hljs-comment">// print out information about all Employee objects</span><br>      <span class="hljs-keyword">for</span> (Employee e : staff)<br>         System.out.println(<span class="hljs-string">&quot;name=&quot;</span> + e.getName() + <span class="hljs-string">&quot;,salary=&quot;</span> + e.getSalary() + <span class="hljs-string">&quot;,hireDay=&quot;</span><br>               + e.getHireDay());<br>   &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Employee</span></span><br><span class="hljs-class"></span>&#123;<br>   <span class="hljs-keyword">private</span> String name;<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> salary;<br>   <span class="hljs-keyword">private</span> LocalDate hireDay;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Employee</span><span class="hljs-params">(String n, <span class="hljs-keyword">double</span> s, <span class="hljs-keyword">int</span> year, <span class="hljs-keyword">int</span> month, <span class="hljs-keyword">int</span> day)</span></span><br><span class="hljs-function">   </span>&#123;<br>      name = n;<br>      salary = s;<br>      hireDay = LocalDate.of(year, month, day);<br>   &#125;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span><br><span class="hljs-function">   </span>&#123;<br>      <span class="hljs-keyword">return</span> name;<br>   &#125;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getSalary</span><span class="hljs-params">()</span></span><br><span class="hljs-function">   </span>&#123;<br>      <span class="hljs-keyword">return</span> salary;<br>   &#125;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> LocalDate <span class="hljs-title">getHireDay</span><span class="hljs-params">()</span></span><br><span class="hljs-function">   </span>&#123;<br>      <span class="hljs-keyword">return</span> hireDay;<br>   &#125;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">raiseSalary</span><span class="hljs-params">(<span class="hljs-keyword">double</span> byPercent)</span></span><br><span class="hljs-function">   </span>&#123;<br>      <span class="hljs-keyword">double</span> raise = salary * byPercent / <span class="hljs-number">100</span>;<br>      salary += raise;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h1 id="多源文件">2. 多源文件</h1><p>许多程序员习惯于将每一个类存在一个单独的源文件中。例如，将<code> Employee</code>类存放在文件<code> Employee.java</code>中，将 <code>EmployeeTest</code>类存放在文件 <code>EmployeeTest.java</code>中。如果喜欢这样组织文件，将可以有两种编译源程序的方法。</p>
+<h2 id="多源文件">5.2. 多源文件</h2><p>许多程序员习惯于将每一个类存在一个单独的源文件中。例如，将<code> Employee</code>类存放在文件<code> Employee.java</code>中，将 <code>EmployeeTest</code>类存放在文件 <code>EmployeeTest.java</code>中。如果喜欢这样组织文件，将可以有两种编译源程序的方法。</p>
 <ul>
 <li>一种是使用通配符调用Java编译器：<code>javac Employee*.java</code>，于是所有与通配符匹配的源文件都将被编译成类文件。</li>
 <li>或者键入下列命令<code>javac Employeetest.java</code><ul>
@@ -281,6 +347,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/06/04/java-%E6%B3%A8%E9%87%8A/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java-注释</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
