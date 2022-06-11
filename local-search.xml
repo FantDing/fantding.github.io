@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>padavan开启ipv6外网访问</title>
+    <link href="/4575.html"/>
+    <url>/4575.html</url>
+    
+    <content type="html"><![CDATA[<h1 id="背景">1. 背景</h1><p>最近一直想要个树莓派之类的卡片服务器，部署个小网站或者WebDAV服务啥的。但是本着勤俭节约的优良传统，做了一波调研后发现android手机可以模拟Linux，巧了家里有台XiaoMi note3，6GB内存，128GB存储。配置应该是够了。不管是使用android还是本地电脑部署服务，第一步是让服务能够被外网访问到，于是便诞生了这片文章。</p><p>本篇文章主要介绍，如何使用IPV6实现外网访问。主要包括以下几个方面：</p><ul><li>本地起服务</li><li>配置外网访问</li><li>验证外网访问</li></ul><blockquote><p>本教程前提是已经申请到了IPV6地址，具体可见<a href="https://www.jianshu.com/p/1b0eb3073a0b">教程</a></p></blockquote><h1 id="本地起服务">2. 本地起服务</h1><blockquote><p>更多教程可见<a href="https://docs.djangoproject.com/zh-hans/4.0/topics/install/#installing-official-release">django官网</a></p></blockquote><p>本文使用django测试服务。首先在本地电脑安装django</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -m pip install Django<br></code></pre></td></tr></table></figure><ul><li>创建项目并运行<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">django-admin startproject mysite <span class="hljs-comment"># 新建mysite项目</span><br><br><span class="hljs-built_in">cd</span> mysite<br><br>python manage.py runserver [::]:8000 <span class="hljs-comment"># 或 python manage.py runserver \[::\]:8000</span><br></code></pre></td></tr></table></figure></li></ul><p>启动服务后，浏览器访问<code>http://[::]:8000/</code>可以访问到django的默认页面<br><img src="https://i.bmp.ovh/imgs/2022/06/05/8a5aabc16b268c23.png"></p><h2 id="确定本地Ipv6地址">2.1. 确定本地Ipv6地址</h2><p>除了访问<code>[::]</code>还可以直接通过ipv6地址进行访问。<br>通过访问 <a href="https://test-ipv6.com/index.html.zh_CN">ipv6测试网站</a> 不但可以确定设备是否已经分配到Ipv6地址，还可以确定Ipv6<br>具体的地址是多少。如下图：<br><img src="https://i.bmp.ovh/imgs/2022/06/05/6d9fe274f3a5dddb.png"><br>通过访问<code>http://[2408:8207:24af:ebb1:6884:8917:48ed:88c6]:8000/</code>也能看到django默认启动页。</p><h1 id="配置外网访问">3. 配置外网访问</h1><p>至此局域网内已经可以访问服务。虽说Ipv6地址全球唯一并且可以直接远程访问。但是由于 <em>防火墙</em> 存在，仍然无法直接访问本地端口，需要对路由器进行设置。</p><p>先说一下我家里的网络环境：光纤 -&gt; 联通光猫 -&gt; 红米Redmi AC2100(刷了Padavan系统)。</p><p>需要做的是关闭路由器&amp;光猫的防火墙：</p><ul><li>关闭Padavan ipv6防火墙。这个网上搜索一大堆，具体见下图，附上命令：</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">ip6tables -F<br>ip6tables -X<br>ip6tables -P INPUT ACCEPT<br>ip6tables -P OUTPUT ACCEPT<br>ip6tables -P FORWARD ACCEPT<br></code></pre></td></tr></table></figure><p><img src="https://i.bmp.ovh/imgs/2022/06/05/53c0d976a303c947.png"></p><ul><li>关闭光猫ipv6防火墙</li></ul><p>我家是联通网络，访问<code>http://192.168.1.1/</code>并且登陆后，选择：安全 -&gt; 防火墙 -&gt; 取消<code>Ipv6spi</code>前面的勾选<br><img src="https://i.bmp.ovh/imgs/2022/06/05/8aa7d5efdc0f1778.png"></p><p>(刚刚看到了移动宽带猫的设置，如果是移动用户可以参考下：<a href="https://zhuanlan.zhihu.com/p/441632909">zhihu</a>)</p><h1 id="外网访问验证">4. 外网访问验证</h1><p>至此应该可以直接访问ipv6地址访问到对应设备。可以关闭手机WIFI启用流量（避免和服务设备处于同一个局域网），在手机浏览器中输入<code>http://[你的IPV6地址]:8000/</code>，如果看到django的服务页面，恭喜恭喜🎉已经完成外网访问了</p><h1 id="更多">5. 更多</h1><p>此文已经说明如何启动本地服务让外网访问，但是如何使用废弃的安卓手机搭建服务？IPV6地址总是改变，如何配置域名访问？等问题还没有涉及，如果感兴趣可以关注博客，后续会持续更新 🙏</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>manjaro grub2添加win10引导启动菜单</title>
+    <link href="/58847.html"/>
+    <url>/58847.html</url>
+    
+    <content type="html"><![CDATA[<h1 id="背景">1. 背景</h1><p>manjaro更新后，每次启动直接进manjaro了，没办法从菜单中选择进入win10</p><h1 id="解决">2. 解决</h1><h2 id="step1-打开grub2菜单">2.1. step1. 打开grub2菜单</h2><ul><li>root权限打开<code>/etc/default/grub</code></li><li>修改以下两处：<ul><li><code>GRUB_TIMEOUT_STYLE=hidden</code> -&gt; <code>GRUB_TIMEOUT_STYLE=menu</code></li><li><code>GRUB_TIMEOUT=0</code> -&gt; <code>GRUB_TIMEOUT=10</code></li></ul></li><li><code>sudo update-grub</code></li><li>重启应该就能看到菜单了</li></ul><h2 id="step2-添加win10引导">2.2. step2. 添加win10引导</h2><blockquote><p>参考<a href="https://unix.stackexchange.com/questions/453124/add-windows-10-to-grub2-bootloader">Starbuck的回答</a></p></blockquote><ul><li><p>修改<code>/etc/grub.d/40_custom</code>如下：（其他数字的文件也可以，但要保证原文件没有引导信息）</p><ul><li>如何确定<code>--fs-uuid</code>后面的序列（如：<code>109C-D028</code>）<ul><li> use <code>sudo fdisk -l</code> to identify the EFI partition</li><li> <code>sudo blkid /dev/sda1</code> (or whatever) to find the UUID of the EFI partition<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-built_in">exec</span> <span class="hljs-built_in">tail</span> -n +3 <span class="hljs-variable">$0</span><br><span class="hljs-comment"># This file provides an easy way to add custom menu entries.  Simply type the</span><br><span class="hljs-comment"># menu entries you want to add after this comment.  Be careful not to change</span><br><span class="hljs-comment"># the &#x27;exec tail&#x27; line above.</span><br>menuentry <span class="hljs-string">&quot;Windows 10 (loader)&quot;</span>&#123;<br>    insmod part_gpt<br>    search --no-floppy --<span class="hljs-built_in">set</span>=root --fs-uuid xxxx-xxxx<br>    chainloader /EFI/Microsoft/Boot/bootmgfw.efi<br>&#125;<br></code></pre></td></tr></table></figure></li></ul></li></ul></li><li><p><code>update-grub</code>后，重启</p></li></ul><h1 id="参考">3. 参考</h1><ul><li><a href="https://askubuntu.com/questions/182248/why-is-grub-menu-not-shown-when-starting-my-computer">https://askubuntu.com/questions/182248/why-is-grub-menu-not-shown-when-starting-my-computer</a></li><li><a href="https://unix.stackexchange.com/questions/453124/add-windows-10-to-grub2-bootloader">https://unix.stackexchange.com/questions/453124/add-windows-10-to-grub2-bootloader</a></li><li><a href="https://askubuntu.com/questions/661947/add-windows-10-to-grub-os-list">https://askubuntu.com/questions/661947/add-windows-10-to-grub-os-list</a></li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>推荐系统入门</title>
+    <link href="/65244.html"/>
+    <url>/65244.html</url>
+    
+    <content type="html"><![CDATA[<ul><li>两个阶段：<ul><li>召回：要求快</li><li>排序：要求准（为什么分为两个阶段：对全量数据做排序太慢了）</li></ul></li></ul><p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210425105043127.png" alt="image-20210425105043127"></p><ul><li>四个阶段：<ul><li>召回</li><li>粗排：有时候因为每个用户召回环节返回的物品数量还是太多，怕排序环节速度跟不上，所以可以在召回和精排之间加入一个粗排环节</li><li>精排：使用你能想到的任何特征，可以上你能承受速度极限的复杂模型，尽量精准地对物品进行个性化排序</li><li>重排：传统地看，这里往往会上各种技术及业务策略，比如去已读、去重、打散、多样性保证、固定类型物品插入等等，主要是技术产品策略主导或者为了改进用户体验的</li></ul></li></ul><p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210425105105319.png" alt="image-20210425105105319"></p><h1 id="召回">1. 召回</h1><h2 id="多路召回">1.1. 多路召回</h2><ul><li><p>策略为主：“多路”即“多个策略”</p></li><li><p>如：</p><ul><li><p>“兴趣标签”召回：用户有“兴趣标签”；商品有“属性标签”。当用户兴趣标签与商品属性标签接近时，则召回此商品</p><p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210429094337663.png" alt="image-20210429094337663"></p></li><li><p>兴趣Topic：相当于soft标签</p><p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210429094257164.png" alt="image-20210429094257164"></p></li><li><p>兴趣实体</p></li><li><p>协同过滤</p></li><li><p>热门</p></li></ul></li></ul><h3 id="多路召回结果融合">1.1.1. 多路召回结果融合</h3><h2 id="模式召回">1.2. 模式召回</h2><h3 id="多路召回缺点">1.2.1. 多路召回缺点</h3><ul><li><p>融合时，各个路的权重不易确定</p></li><li><p>时间上：最终召回时间为用时最长的那一路</p></li><li><p>输出上：各个路输出结果分数内部有比较意义，外部没法比较。下图中<code>i4</code>商品并不比<code>i2</code>更值得推荐</p><p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210429095438390.png" alt="image-20210429095438390"></p></li></ul><h3 id="模式召回-1">1.2.2. 模式召回</h3><ul><li>输入：多个特征</li></ul><p><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210429095600619.png" alt="image-20210429095600619"></p><h3 id="架构">1.2.3. 架构</h3><ul><li>模型：FM/FFM…</li></ul><img src="https://raw.githubusercontent.com/FantDing/pictures/master/image-20210429100139299.png" alt="image-20210429100139299" style="zoom:50%;"><h1 id="参考文献">2. 参考文献</h1><ul><li>图片、内容来源：<a href="https://zhuanlan.zhihu.com/p/100019681">https://zhuanlan.zhihu.com/p/100019681</a></li><li><a href="https://www.bilibili.com/video/BV1L54y1y7dN">推荐系统之召回、粗排特训营-1-1_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</a></li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>推荐系统</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
